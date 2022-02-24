@@ -189,7 +189,7 @@ join_counts.py "${params.output_prefix}"
 """
 }
 
-process concat_sublib_counts{
+process concat_sublib{
     container "${mageck_container}"
     label "io_limited"
 
