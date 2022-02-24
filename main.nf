@@ -234,7 +234,7 @@ workflow {
         )
 
         // Concatenate sublibraries 
-        concat_sublib_counts(
+        concat_sublib(
             join_counts.out,
             join_counts2.out,
         )
@@ -256,6 +256,7 @@ workflow {
             control_mageck.out.toSortedList(),
         )
     }
+
 
     // If the user supplied a list of guides used as negative controls
     if(params.ntc_list){
