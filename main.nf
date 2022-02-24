@@ -234,10 +234,10 @@ workflow {
         )
 
         // Concatenate sublibraries 
-        //concat_sublib_counts(
-        //    join_counts.out,
-        //    join_counts2.out,
-        //)
+        concat_sublib_counts(
+            join_counts.out,
+            join_counts2.out,
+        )
 
     }else{
         // Run MAGeCK on the treatment FASTQ files
