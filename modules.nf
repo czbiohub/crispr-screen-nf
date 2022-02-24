@@ -12,7 +12,7 @@ process mageck {
         tuple file(fastq), file(library)
 
     output:
-        file "${params.output_prefix}*"
+        file "*.count_normalized.txt"
 
     script:
     sample_name = "${fastq.simpleName}"
@@ -171,14 +171,14 @@ mageck_flute_mle.R \
 process join_counts {
     container "quay.io/fhcrc-microbiome/python-pandas:v1.2.1_latest"
     label "io_limited"
-    publishDir "${params.output}/count/joined", mode: "copy", overwrite: "false"
+    publishDir "${params.output}/count/joined", mode: "copy", overwrite: "true"
 
     input:
         file "treatment/treatment_*.txt"
         file "control/control_*.txt"
 
     output:
-        tuple file("${params.output_prefix}.counts.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
+        tuple file("${params.output_prefix}.count_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
 
     script:
 """
@@ -193,7 +193,7 @@ process concat_sublib_counts{
     container "${mageck_container}"
     label "io_limited"
 
-    publishDir "${params.output}/count/normalized", mode: 'copy', overwrite: false
+    publishDir "${params.output}/count/joined_sublibs", mode: 'copy', overwrite: true
 
     input:
         sublibA = tuple file("${params.output_prefix}.count_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
@@ -207,9 +207,9 @@ process concat_sublib_counts{
 
         set -Eeuo pipefail
 
-        tail -n+2 "${normcount_table2}" > normcount_table2_temp
+        tail -n+2 "${normcount_table2}" > normcount_table2_temp.csv
         
-        cat "${normcount_table1}" normcount_table2_temp > "${params.output_prefix}.counts_normalized.txt"
+        cat "${normcount_table1}" normcount_table2_temp.csv > "${params.output_prefix}.counts_normalized.txt"
         """
 
 }
