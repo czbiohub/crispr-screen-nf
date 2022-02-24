@@ -16,6 +16,7 @@ params.scale_cutoff = 1
 params.skip_flute = false
 params.treatname = false
 params.ctrlname = false
+params.sublibrary = false
 
 // Space delimited list of file endings to be removed from
 // FASTQ file names to yield the samples names that they
@@ -27,6 +28,10 @@ include {
     mageck as treatment_mageck;
     mageck as control_mageck;
     join_counts;
+    mageck as treatment_mageck2;
+    mageck as control_mageck2;
+    join_counts as join_counts2;
+    //concat_sublib_counts;
     mageck_test_rra;
     mageck_test_ntc;
     mageck_test_mle;
@@ -39,40 +44,41 @@ include {
     organism: params.organism,
     scale_cutoff: params.scale_cutoff,
     treatname: params.treatname,
-    ctrlname: params.ctrlname,
+    ctrlname: params.ctrlname
 )
 
 // Function which prints help message text
 def helpMessage() {
-    log.info"""
-Usage:
-nextflow run FredHutch/crispr-screen-nf
+    log.info
+    """
+    Usage:
+    nextflow run FredHutch/crispr-screen-nf
 
-Required Arguments:
-    --treatment_fastq   Path to FASTQ data for treatment samples
-    --control_fastq     Path to FASTQ data for control samples
-                        Multiple files can be specified with wildcards and commas, e.g.
-                            /path/to/inputs/A/*.fastq.gz,/path/to/inputs/B/*.fq.gz
-    --library           Text file describing sgRNA library
-                            As described at https://sourceforge.net/p/mageck/wiki/input/
-    --output            Path to output directory
-    --output_prefix     Prefix for all output files
+    Required Arguments:
+        --treatment_fastq   Path to FASTQ data for treatment samples
+        --control_fastq     Path to FASTQ data for control samples
+                            Multiple files can be specified with wildcards and commas, e.g.
+                                /path/to/inputs/A/*.fastq.gz,/path/to/inputs/B/*.fq.gz
+        --library           Text file describing sgRNA library
+                                As described at https://sourceforge.net/p/mageck/wiki/input/
+        --output            Path to output directory
+        --output_prefix     Prefix for all output files
 
-Optional Arguments:
-    --ntc_list          Path to file describing negative controls
-                            As described in https://sourceforge.net/p/mageck/wiki/input/#negative-control-sgrna-list
-    --mle_designmat     To use MAGeCK-mle to call gene essentiality, use this flag
-                            to specify the path a design matrix file as described in
-                            https://sourceforge.net/p/mageck/wiki/demo/#the-fourth-tutorial-using-mageck-mle-module
-    --organism          Organism string provided for MAGeCK-Flute (default: hsa)
-    --scale_cuttoff     Parameter 'scale_cutoff' for MAGeCK-Flute (default: 1)
-    --skip_flute        MAGeCK-Flute is only compatible with human (hsa) or mouse (mmu) gene symbols.
-                        If the guide library contains gene symbols which are not compatible, set this
-                        flag to skip the MAGeCK-Flute portion of the analysis.
-    --treatname         Name of treatment group from design matrix (required for FluteMLE)
-    --ctrlname          Name of control group from design matrix (required for FluteMLE)
+    Optional Arguments:
+        --ntc_list          Path to file describing negative controls
+                                As described in https://sourceforge.net/p/mageck/wiki/input/#negative-control-sgrna-list
+        --mle_designmat     To use MAGeCK-mle to call gene essentiality, use this flag
+                                to specify the path a design matrix file as described in
+                                https://sourceforge.net/p/mageck/wiki/demo/#the-fourth-tutorial-using-mageck-mle-module
+        --organism          Organism string provided for MAGeCK-Flute (default: hsa)
+        --scale_cuttoff     Parameter 'scale_cutoff' for MAGeCK-Flute (default: 1)
+        --skip_flute        MAGeCK-Flute is only compatible with human (hsa) or mouse (mmu) gene symbols.
+                            If the guide library contains gene symbols which are not compatible, set this
+                            flag to skip the MAGeCK-Flute portion of the analysis.
+        --treatname         Name of treatment group from design matrix (required for FluteMLE)
+        --ctrlname          Name of control group from design matrix (required for FluteMLE)
 
-"""
+    """
 }
 
 workflow {
@@ -144,36 +150,112 @@ workflow {
         exit 1
     }
 
-    // Make a channel with the input reads for treatment samples
-    Channel
-        .fromPath(params.treatment_fastq.split(",").toList())
-        .set{treatment_reads_ch}
+    if(params.sublibrary){
+        // Make a channel with the input reads for treatment samples
+        Channel
+            .fromPath(params.treatment_fastq.split(",").toList())
+            .branch{
+            sublib_A: it =~ /_A_/
+            sublib_B: it =~ /_B_/
+            }
+            .set{treatment_reads_ch}
+            
 
-    // Make a channel with the input reads for control samples
-    Channel
-        .fromPath(params.control_fastq.split(",").toList())
-        .set{control_reads_ch}
+        // Make a channel with the input reads for control samples
+        Channel
+            .fromPath(params.control_fastq.split(",").toList())
+            .branch{
+            sublib_A: it =~ /_A_/
+            sublib_B: it =~ /_B_/
+            }
+            .set{control_reads_ch}
 
-    // Read the sgRNA library file
-    Channel
-        .fromPath(params.library)
-        .set{sgrna_library}
+        // Read the sgRNA library file
+        Channel
+            .fromPath(params.library.split(",").toList())
+            .branch{
+            sublib_A: it =~ /library_A/
+            sublib_B: it =~ /library_B/
+            }
+            .set{sgrna_library}
+    }
+    else {
+        // Make a channel with the input reads for treatment samples
+        Channel
+            .fromPath(params.treatment_fastq.split(",").toList())
+            .set{treatment_reads_ch}
 
-    // Run MAGeCK on the treatment FASTQ files
-    treatment_mageck(
-        treatment_reads_ch.combine(sgrna_library)
-    )
+        // Make a channel with the input reads for control samples
+        Channel
+            .fromPath(params.control_fastq.split(",").toList())
+            .set{control_reads_ch}
 
-    // Run MAGeCK on the control FASTQ files
-    control_mageck(
-        control_reads_ch.combine(sgrna_library)
-    )
+        // Read the sgRNA library file
+        Channel
+            .fromPath(params.library)
+            .set{sgrna_library}
+    }
 
-    // Join together the counts from all samples
-    join_counts(
-        treatment_mageck.out.toSortedList(),
-        control_mageck.out.toSortedList(),
-    )
+    if (params.sublibrary){
+
+    
+        ///////// SUB LIBRARY A ////////
+        // Run MAGeCK count on treatment FASTQ files for sub-library A 
+        treatment_mageck(
+            treatment_reads_ch.sublib_A.combine(sgrna_library.sublib_A)
+        )
+
+        // Run MAGeCK count on the control FASTQ files for sub-library A
+        control_mageck(
+            control_reads_ch.sublib_A.combine(sgrna_library.sublib_A)
+        )
+
+        // Join together the counts from all samples for sub-library A
+        join_counts(
+            treatment_mageck.out.toSortedList(),
+            control_mageck.out.toSortedList(),
+        )
+
+        ///////// SUB LIBRARY B ////////
+        // Run MAGeCK count on treatment FASTQ files for sub-library B 
+        treatment_mageck2(
+            treatment_reads_ch.sublib_B.combine(sgrna_library.sublib_B)
+        )
+
+        // Run MAGeCK count on the control FASTQ files for sub-library B
+        control_mageck2(
+            control_reads_ch.sublib_B.combine(sgrna_library.sublib_B)
+        )
+
+        // Join together the counts from all samples for sub-library B
+        join_counts2(
+            treatment_mageck2.out.toSortedList(),
+            control_mageck2.out.toSortedList(),
+        )
+
+        // Concatenate sublibraries 
+        //concat_sublib_counts(
+        //    join_counts.out,
+        //    join_counts2.out,
+        //)
+
+    }else{
+        // Run MAGeCK on the treatment FASTQ files
+        treatment_mageck(
+            treatment_reads_ch.combine(sgrna_library)
+        )
+
+        // Run MAGeCK on the control FASTQ files
+        control_mageck(
+            control_reads_ch.combine(sgrna_library)
+        )
+
+        // Join together the counts from all samples
+        join_counts(
+            treatment_mageck.out.toSortedList(),
+            control_mageck.out.toSortedList(),
+        )
+    }
 
     // If the user supplied a list of guides used as negative controls
     if(params.ntc_list){

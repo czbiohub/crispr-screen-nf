@@ -12,7 +12,7 @@ process mageck {
         tuple file(fastq), file(library)
 
     output:
-        file "${params.output_prefix}.*"
+        file "${params.output_prefix}*"
 
     script:
     sample_name = "${fastq.simpleName}"
