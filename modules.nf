@@ -171,7 +171,7 @@ mageck_flute_mle.R \
 process join_counts {
     container "quay.io/fhcrc-microbiome/python-pandas:v1.2.1_latest"
     label "io_limited"
-    publishDir "${params.output}/count/joined", mode: "copy", overwrite: "true"
+    publishDir "${params.output}/count/joined", mode: "copy", overwrite: "false"
 
     input:
         file "treatment/treatment_*.txt"
@@ -193,7 +193,7 @@ process concat_sublib_counts{
     container "${mageck_container}"
     label "io_limited"
 
-    publishDir "${params.output}/count/normalized", mode: 'copy', overwrite: true
+    publishDir "${params.output}/count/normalized", mode: 'copy', overwrite: false
 
     input:
         sublibA = tuple file("${params.output_prefix}.count_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
