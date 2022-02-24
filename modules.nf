@@ -146,7 +146,7 @@ process mageck_flute_mle {
     publishDir "${params.output}/mle_flute/", mode: "copy", overwrite: "true"
 
     input:
-        file "*"
+        file "*.count_normalized.txt"
 
     output:
         file "MAGeCKFlute_${params.output_prefix}/*"
