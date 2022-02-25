@@ -276,7 +276,7 @@ workflow {
         if (params.sublibrary){
             // Run mageck test without the control-sgrna option
             mageck_test_rra( 
-                concat_sublib.out, join_counts.out[1], join_counts.out[2] 
+                tuple file(concat_sublib.out), join_counts.out[1], join_counts.out[2] 
             )
         }
         else{
