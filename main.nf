@@ -256,7 +256,9 @@ workflow {
         )
     }
 
-
+    ch = Channel.create()
+    ch << join_counts.out 
+    
     // If the user supplied a list of guides used as negative controls
     if(params.ntc_list){
 
@@ -318,12 +320,13 @@ workflow {
             }else{
 
                 // Tell the user why MAGeCK-Flute isn't being run
-                log.info"""
-MAGeCK-Flute cannot be run on MLE outputs without specifing
-the treatment and control groups from the design matrix using
-the --ctrlname and --treatname flags.
+                log.info
+                """
+                MAGeCK-Flute cannot be run on MLE outputs without specifing
+                the treatment and control groups from the design matrix using
+                the --ctrlname and --treatname flags.
 
-See nextflow run FredHutch/crispr-screen-nf --help for more details.
+                See nextflow run FredHutch/crispr-screen-nf --help for more details.
                 """
             }
 
