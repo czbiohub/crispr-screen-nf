@@ -193,7 +193,7 @@ join_counts.py "${params.output_prefix}"
 process join_counts2 {
     container "quay.io/fhcrc-microbiome/python-pandas:v1.2.1_latest"
     label "io_limited"
-    publishDir "${params.output}/count/joined", mode: "copy", overwrite: "true"
+    publishDir "${params.output}/count/joined", mode: "copy", overwrite: "false"
 
     input:
         file "treatment/treatment_*.txt"
