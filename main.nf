@@ -237,7 +237,6 @@ workflow {
             join_counts2.out,
         )
 
-        join_counts.out = concat_sublib.out
 
     }else{
         // Run MAGeCK on the treatment FASTQ files
