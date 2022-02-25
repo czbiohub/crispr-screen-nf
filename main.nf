@@ -273,11 +273,17 @@ workflow {
 
     // Otherwise
     }else{
-
-        // Run mageck test without the control-sgrna option
-        mageck_test_rra(
-            concat_sublib.out 
-        ) // May need to modify for all other parameters using join_counts.out
+        if (params.sublibrary){
+            // Run mageck test without the control-sgrna option
+            mageck_test_rra( 
+                concat_sublib.out 
+            )
+        }
+        else{
+            mageck_test_rra( 
+                join_counts.out 
+            )
+        }
 
         // If the user has not set the --skip_flute flag
         if(!params.skip_flute){
