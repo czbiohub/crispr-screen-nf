@@ -232,7 +232,9 @@ process concat_sublib{
 
         tail -n+2 $y > temp.tsv
         
-        cat $x temp.tsv > "${params.output_prefix}_cc.counts_normalized.tsv"
+        cat $x temp.tsv > temp2
+        
+        awk 'NF>=3' temp2 > file"${params.output_prefix}_cc.counts_normalized.tsv"
         """
 
 }
