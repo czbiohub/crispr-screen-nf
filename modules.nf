@@ -223,7 +223,7 @@ process concat_sublib{
         file(y)
 
     output:
-        file("${params.output_prefix}_cc.counts_normalized.txt")
+        file("${params.output_prefix}_cc.counts_normalized.tsv")
 
     script:
         """/bin/bash
