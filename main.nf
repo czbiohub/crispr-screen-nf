@@ -32,6 +32,7 @@ include {
     mageck as control_mageck2;
     join_counts2;
     concat_sublib;
+    create_mageck_test_tuple;
     mageck_test_rra;
     mageck_test_ntc;
     mageck_test_mle;
