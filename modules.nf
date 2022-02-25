@@ -230,9 +230,9 @@ process concat_sublib{
 
         set -Eeuo pipefail
 
-        tail -n+2 $y > temp.tsv
+        tail -n+2 $y > $y
         
-        cat $x temp.tsv > "${params.output_prefix}_cc.counts_normalized.tsv"
+        cat $x $y > "${params.output_prefix}_cc.counts_normalized.tsv"
         """
 
 }
