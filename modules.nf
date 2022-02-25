@@ -40,18 +40,18 @@ process mageck_test_rra {
         file "${params.output_prefix}.*"
 
     script:
-"""/bin/bash
+        """/bin/bash
 
-set -Eeuo pipefail
+        set -Eeuo pipefail
 
-mageck test \
-    -k ${counts_tsv} \
-    -t ${treatment_samples} \
-    -c ${control_samples} \
-    -n "${params.output_prefix}"
+        mageck test \
+            -k ${counts_tsv} \
+            -t "\$(cat ${treatment_samples})" \
+            -c "\$(cat ${control_samples})" \
+            -n "${params.output_prefix}"
 
-ls -lahtr
-"""
+        ls -lahtr
+        """
 
 }
 
@@ -230,9 +230,9 @@ process concat_sublib{
 
         set -Eeuo pipefail
 
-        tail -n+2 $y > temp.csv
+        tail -n+2 $y > temp.tsv
         
-        cat $x temp.csv > "${params.output_prefix}_cc.counts_normalized.txt"
+        cat $x temp.tsv > "${params.output_prefix}_cc.counts_normalized.tsv"
         """
 
 }
