@@ -245,7 +245,7 @@ process create_mageck_test_tuple{
         tuple file(y), file("${params.output_prefix}_treatment_sample_names.txt"), file("${params.output_prefix}_control_sample_names.txt")
 
     output:
-        tuple file(x), file(treatment_names), file(control_names)
+        tuple file(x), file("${params.output_prefix}_treatment_sample_names.txt"), file("${params.output_prefix}_control_sample_names.txt")
 
     script:
         """/bin/bash
