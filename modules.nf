@@ -218,11 +218,11 @@ process concat_sublib{
     publishDir "${params.output}/count/joined_sublibs", mode: 'copy', overwrite: true
 
     input:
-        tuple file(x), file("treatment_sample_names.txt"), file("control_sample_names.txt")
-        tuple file(y), file("treatment_sample_names.txt"), file("control_sample_names.txt")
+        tuple file(x)
+        tuple file(y)
 
     output:
-        tuple file("${params.output_prefix}_cc.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
+        tuple file("${params.output_prefix}_cc.counts_normalized.txt")
 
     script:
         """/bin/bash
