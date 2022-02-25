@@ -57,6 +57,6 @@ pd.concat(
     [treatment_data, control_data],
     axis=1
 ).to_csv(
-    f"{output_prefix}.counts.txt",
+    f"{output_prefix}.counts_normalized.txt",
     sep="\t"
 )

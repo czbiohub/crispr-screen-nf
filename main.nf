@@ -30,7 +30,7 @@ include {
     join_counts;
     mageck as treatment_mageck2;
     mageck as control_mageck2;
-    join_counts as join_counts2;
+    join_counts2;
     concat_sublib;
     mageck_test_rra;
     mageck_test_ntc;

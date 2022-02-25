@@ -178,7 +178,29 @@ process join_counts {
         file "control/control_*.txt"
 
     output:
-        tuple file("${params.output_prefix}.count_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
+        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt") into joinedCounts
+
+    script:
+"""
+set -Eeuo pipefail
+
+join_counts.py "${params.output_prefix}"
+
+"""
+}
+
+// Process used to join the outputs from mageck / counts
+process join_counts2 {
+    container "quay.io/fhcrc-microbiome/python-pandas:v1.2.1_latest"
+    label "io_limited"
+    publishDir "${params.output}/count/joined", mode: "copy", overwrite: "true"
+
+    input:
+        file "treatment/treatment_*.txt"
+        file "control/control_*.txt"
+
+    output:
+        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt") into joinedCounts2
 
     script:
 """
@@ -196,8 +218,8 @@ process concat_sublib{
     publishDir "${params.output}/count/joined_sublibs", mode: 'copy', overwrite: true
 
     input:
-        tuple file(x), file("treatment_sample_names.txt"), file("control_sample_names.txt") from join_counts
-        tuple file(y), file("treatment_sample_names.txt"), file("control_sample_names.txt") from join_counts2
+        tuple file(x), file("treatment_sample_names.txt"), file("control_sample_names.txt") from joinedCounts
+        tuple file(y), file("treatment_sample_names.txt"), file("control_sample_names.txt") from joinedCounts2
         
 
     output:
