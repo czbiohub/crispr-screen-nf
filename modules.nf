@@ -23,6 +23,7 @@ process mageck {
 
     mageck count -l ${library} -n ${sample_name} --sample-label ${sample_name}  --fastq ${fastq}
     """
+    
 
 }
 
@@ -45,8 +46,8 @@ set -Eeuo pipefail
 
 mageck test \
     -k ${counts_tsv} \
-    -t "\$(cat ${treatment_samples})" \
-    -c "\$(cat ${control_samples})" \
+    -t ${treatment_samples}) \
+    -c ${control_samples}) \
     -n "${params.output_prefix}"
 
 ls -lahtr
