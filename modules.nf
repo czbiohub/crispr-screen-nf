@@ -178,7 +178,7 @@ process join_counts {
         file "control/control_*.txt"
 
     output:
-        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt") into joinedCounts
+        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
 
     script:
 """
@@ -200,7 +200,7 @@ process join_counts2 {
         file "control/control_*.txt"
 
     output:
-        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt") into joinedCounts2
+        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
 
     script:
 """
@@ -218,12 +218,12 @@ process concat_sublib{
     publishDir "${params.output}/count/joined_sublibs", mode: 'copy', overwrite: true
 
     input:
-        tuple file(x), file("treatment_sample_names.txt"), file("control_sample_names.txt") from joinedCounts
-        tuple file(y), file("treatment_sample_names.txt"), file("control_sample_names.txt") from joinedCounts2
+        tuple file(x), file("treatment_sample_names.txt"), file("control_sample_names.txt")
+        tuple file(y), file("treatment_sample_names.txt"), file("control_sample_names.txt")
         
 
     output:
-        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt") into total_norm_counts
+        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
 
     script:
         """/bin/bash
