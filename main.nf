@@ -237,7 +237,6 @@ workflow {
             join_counts2.out,
         )
 
-
     }else{
         // Run MAGeCK on the treatment FASTQ files
         treatment_mageck(
@@ -256,9 +255,6 @@ workflow {
         )
     }
 
-    ch = Channel.create()
-    ch << join_counts.out 
-    
     // If the user supplied a list of guides used as negative controls
     if(params.ntc_list){
 
@@ -280,8 +276,8 @@ workflow {
 
         // Run mageck test without the control-sgrna option
         mageck_test_rra(
-            join_counts.out
-        )
+            concat_sublib.out 
+        ) // May need to modify for all other parameters using join_counts.out
 
         // If the user has not set the --skip_flute flag
         if(!params.skip_flute){
