@@ -46,8 +46,8 @@ set -Eeuo pipefail
 
 mageck test \
     -k ${counts_tsv} \
-    -t ${treatment_samples}) \
-    -c ${control_samples}) \
+    -t ${treatment_samples} \
+    -c ${control_samples} \
     -n "${params.output_prefix}"
 
 ls -lahtr
