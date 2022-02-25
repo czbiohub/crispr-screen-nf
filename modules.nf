@@ -200,13 +200,13 @@ process join_counts2 {
         file "control/control_*.txt"
 
     output:
-        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatmentB_sample_names.txt"), file("controlB_sample_names.txt")
+        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
 
     script:
 """
 set -Eeuo pipefail
 
-join_counts.py "${params.output_prefix}"
+join_counts.py "${params.output_prefix}_B"
 
 """
 }
@@ -219,10 +219,10 @@ process concat_sublib{
 
     input:
         tuple file(x), file("treatment_sample_names.txt"), file("control_sample_names.txt")
-        tuple file(y), file("treatmentB_sample_names.txt"), file("controlB_sample_names.txt")
+        tuple file(y), file("treatment_sample_names.txt"), file("control_sample_names.txt")
 
     output:
-        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
+        tuple file("${params.output_prefix}_cc.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
 
     script:
         """/bin/bash
@@ -231,7 +231,7 @@ process concat_sublib{
 
         tail -n+2 $y > temp.csv
         
-        cat $x temp.csv > "${params.output_prefix}.counts_normalized.txt"
+        cat $x temp.csv > "${params.output_prefix}_cc.counts_normalized.txt"
         """
 
 }
