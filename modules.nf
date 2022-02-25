@@ -218,8 +218,8 @@ process concat_sublib{
     publishDir "${params.output}/count/joined_sublibs", mode: 'copy', overwrite: true
 
     input:
-        tuple file(x)
-        tuple file(y)
+        file(x)
+        file(y)
 
     output:
         tuple file("${params.output_prefix}_cc.counts_normalized.txt")

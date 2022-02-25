@@ -233,8 +233,8 @@ workflow {
 
         // Concatenate sublibraries 
         concat_sublib(
-            join_counts.out,
-            join_counts2.out,
+            join_counts.out[0],
+            join_counts2.out[0],
         )
 
     }else{
@@ -276,7 +276,7 @@ workflow {
         if (params.sublibrary){
             // Run mageck test without the control-sgrna option
             mageck_test_rra( 
-                tuple (concat_sublib.out, join_counts.out[1], join_counts.out[2])
+                tuple concat_sublib.out, join_counts.out[1], join_counts.out[2]
             )
         }
         else{
