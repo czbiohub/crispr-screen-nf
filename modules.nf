@@ -178,7 +178,7 @@ process join_counts {
         file "control/control_*.txt"
 
     output:
-        tuple file("${params.output_prefix}.counts_normalized.txt"), file(treatment_names), file(control_names)
+        tuple file("${params.output_prefix}.counts_normalized.txt"), file("${params.output_prefix}_treatment_sample_names.txt"), file("${params.output_prefix}_control_sample_names.txt")
 
     script:
 """
@@ -200,7 +200,7 @@ process join_counts2 {
         file "control/control_*.txt"
 
     output:
-        tuple file("${params.output_prefix}_B.counts_normalized.txt"), file(treatment_names), file(control_names)
+        tuple file("${params.output_prefix}_B.counts_normalized.txt"), file("${params.output_prefix}_B_treatment_sample_names.txt"), file("${params.output_prefix}_B_control_sample_names.txt")
 
     script:
 """
