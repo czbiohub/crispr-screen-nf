@@ -235,3 +235,23 @@ process concat_sublib{
         """
 
 }
+
+process create_mageck_test_tuple{
+    container "${mageck_container}"
+    label "io_limited"
+
+    input:
+        file(x)
+        tuple file(y), file(treatment_names), file(control_names)
+
+    output:
+        tuple file(x), file(treatment_names), file(control_names)
+
+    script:
+        """/bin/bash
+
+        set -Eeuo pipefail
+
+        echo ${x} ${treatment_names} ${control_names}
+        """
+}
