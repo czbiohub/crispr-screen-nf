@@ -197,8 +197,6 @@ workflow {
     }
 
     if (params.sublibrary){
-
-    
         ///////// SUB LIBRARY A ////////
         // Run MAGeCK count on treatment FASTQ files for sub-library A 
         treatment_mageck(
@@ -238,6 +236,8 @@ workflow {
             join_counts.out,
             join_counts2.out,
         )
+
+        join_counts.out = total_norm_counts
 
     }else{
         // Run MAGeCK on the treatment FASTQ files

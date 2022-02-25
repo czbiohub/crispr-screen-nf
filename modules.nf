@@ -196,20 +196,21 @@ process concat_sublib{
     publishDir "${params.output}/count/joined_sublibs", mode: 'copy', overwrite: true
 
     input:
-        sublibA = tuple file("${params.output_prefix}.count_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
-        sublibB = tuple file("${params.output_prefix}.count_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt")
-    
+        tuple file(x), file("treatment_sample_names.txt"), file("control_sample_names.txt") from join_counts
+        tuple file(y), file("treatment_sample_names.txt"), file("control_sample_names.txt") from join_counts2
+        
+
     output:
-        tuple file("${params.output_prefix}.counts_normalized.txt"), file(treatment_names1), file(control_names2)
+        tuple file("${params.output_prefix}.counts_normalized.txt"), file("treatment_sample_names.txt"), file("control_sample_names.txt") into total_norm_counts
 
     script:
         """/bin/bash
 
         set -Eeuo pipefail
 
-        tail -n+2 "${normcount_table2}" > normcount_table2_temp.csv
+        tail -n+2 $y > temp.csv
         
-        cat "${normcount_table1}" normcount_table2_temp.csv > "${params.output_prefix}.counts_normalized.txt"
+        cat $x temp.csv > "${params.output_prefix}.counts_normalized.txt"
         """
 
 }
