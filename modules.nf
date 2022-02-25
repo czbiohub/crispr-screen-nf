@@ -234,7 +234,7 @@ process concat_sublib{
         
         cat $x temp.tsv > temp2
         
-        awk 'NF>=3' temp2 > file"${params.output_prefix}_cc.counts_normalized.tsv"
+        awk 'NF>=3' temp2 > "${params.output_prefix}_cc.counts_normalized.tsv"
         """
 
 }
