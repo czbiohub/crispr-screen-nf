@@ -46,8 +46,8 @@ process mageck_test_rra {
 
         mageck test \
             -k ${counts_tsv} \
-            -t "\$(cat ${treatment_samples})" \
-            -c "\$(cat ${control_samples})" \
+            -t 0 \
+            -c 1 \
             -n "${params.output_prefix}"
 
         ls -lahtr
