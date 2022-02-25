@@ -235,7 +235,7 @@ workflow {
         // Concatenate sublibraries 
         concat_sublib(
             join_counts.out[0],
-            join_counts2.out[0],
+            join_counts2.out[0]
         )
 
     }else{
