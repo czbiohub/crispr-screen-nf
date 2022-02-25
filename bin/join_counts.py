@@ -45,7 +45,7 @@ control_data = read_tsv_list(
 )
 
 # Write out a list of the specimens in the treatment list
-with open(f"{output_prefix}_treatment_sample_names.txt" %, "w") as handle:
+with open(f"{output_prefix}_treatment_sample_names.txt", "w") as handle:
     handle.write(",".join(treatment_data.columns.values))
 
 # Write out a list of the specimens in the control list
