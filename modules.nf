@@ -241,6 +241,8 @@ process create_mageck_test_tuple{
     container "${mageck_container}"
     label "io_limited"
 
+    publishDir "${params.output}/count/magecktest_tuple_temp", mode: 'copy', overwrite: true
+
     input:
         file(x)
         tuple file(y), file("${params.output_prefix}_treatment_sample_names.txt"), file("${params.output_prefix}_control_sample_names.txt")
