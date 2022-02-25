@@ -242,7 +242,7 @@ process create_mageck_test_tuple{
 
     input:
         file(x)
-        tuple file(y), file(treatment_names), file(control_names)
+        tuple file(y), file("${params.output_prefix}_treatment_sample_names.txt"), file("${params.output_prefix}_control_sample_names.txt")
 
     output:
         tuple file(x), file(treatment_names), file(control_names)
@@ -252,6 +252,6 @@ process create_mageck_test_tuple{
 
         set -Eeuo pipefail
 
-        echo ${x} ${treatment_names} ${control_names}
+        echo ${x} "${params.output_prefix}_treatment_sample_names.txt" "${params.output_prefix}_control_sample_names.txt"
         """
 }
