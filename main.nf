@@ -274,8 +274,9 @@ workflow {
 
     // Otherwise
     }else{
+        // Run mageck test without the control-sgrna option
         if (params.sublibrary){
-            // Run mageck test without the control-sgrna option
+            
             
             mageck_test_rra( 
                 create_mageck_test_tuple(concat_sublib.out, join_counts.out)

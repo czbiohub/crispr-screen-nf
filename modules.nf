@@ -233,6 +233,9 @@ process concat_sublib{
         tail -n+2 $y > temp.tsv
         
         cat $x temp.tsv > temp2
+
+        echo sublibA is $x
+        echo sublibB is $y
         
         awk '$2!=""' temp2 > "${params.output_prefix}_cc.counts_normalized.tsv"
         """
