@@ -52,8 +52,8 @@ process mageck_test_rra {
             -k ${counts_tsv} \
             -t 0 \
             -c 1 \
-            -n "${params.output_prefix}"
-            --norm-method none
+            -n "${params.output_prefix}" \
+            --norm-method none \
             --sort-criteria pos
 
         ls -lahtr
@@ -84,8 +84,8 @@ mageck test \
     -c "\$(cat ${control_samples})" \
     -n "${params.output_prefix}" \
     --control-sgrna ${ntc_list} \
-    --norm-method none
-    --sort-criteria pos
+    --norm-method none \
+    --sort-criteria pos 
 
 ls -lahtr
 """
