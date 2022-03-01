@@ -21,7 +21,11 @@ process mageck {
     echo FASTQ file is ${fastq.name}
     echo Sample name is ${sample_name}
 
-    mageck count -l ${library} -n ${sample_name} --sample-label ${sample_name}  --fastq ${fastq}
+    mageck count \
+        -l ${library} \
+        -n ${sample_name} \
+        --sample-label ${sample_name}  \
+        --fastq ${fastq}
     """
     
 
@@ -49,6 +53,8 @@ process mageck_test_rra {
             -t 0 \
             -c 1 \
             -n "${params.output_prefix}"
+            --norm-method none
+            --sort-criteria pos
 
         ls -lahtr
         """
