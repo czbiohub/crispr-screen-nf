@@ -170,6 +170,8 @@ workflow {
             sublib_B: it =~ /_B_/
             }
             .set{control_reads_ch}
+        
+        control_reads_ch.sublib_A.view { "$it is control file for sublibA" }
 
         // Read the sgRNA library file
         Channel
@@ -276,8 +278,6 @@ workflow {
     }else{
         // Run mageck test without the control-sgrna option
         if (params.sublibrary){
-            
-            
             mageck_test_rra( 
                 create_mageck_test_tuple(concat_sublib.out, join_counts.out)
             )
