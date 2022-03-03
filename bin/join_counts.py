@@ -10,8 +10,7 @@ output_prefix = sys.argv[1]
 def read_tsv_list(fp_list, index_cols):
 
     return pd.concat(
-        [
-            pd.read_csv(
+        [pd.read_csv(
                 fp,
                 sep = "\t"
             ).set_index(
@@ -57,6 +56,5 @@ pd.concat(
     [treatment_data, control_data],
     axis=1
 ).to_csv(
-    f"{output_prefix}.counts_normalized.tsv",
-    sep="\t"
+    f"{output_prefix}.counts_normalized.tsv", sep="\t"
 )

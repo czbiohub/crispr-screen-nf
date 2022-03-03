@@ -171,7 +171,6 @@ workflow {
             }
             .set{control_reads_ch}
         
-        control_reads_ch.sublib_A.view { "$it is control file for sublibA" }
 
         // Read the sgRNA library file
         Channel
